@@ -1,1 +1,1 @@
-<?php echo shell_exec("/var/www/html/cloudcity/git pull 2>&1");?>
+<?php echo shell_exec("git pull 2>&1");?>
