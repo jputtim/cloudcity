@@ -3,4 +3,5 @@
 /logs
 .DS_STORE
 composer.lock
+docs/*.bak
 */**/cache
