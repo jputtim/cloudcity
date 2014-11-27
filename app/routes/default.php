@@ -17,7 +17,7 @@ $app->map('/login', function () use ($app) {
         $result = $app->authenticator->authenticate($email, $password);
 
         if ($result->isValid()) {
-            $app->redirect('/');
+            $app->redirect('/dashboard');
         } else {
             $messages = $result->getMessages();
             $app->flashNow('error', $messages[0]);
