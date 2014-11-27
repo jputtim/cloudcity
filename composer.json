@@ -1,0 +1,22 @@
+{
+    "name": "gilglecio/slim-skeleton",
+    "description": "A Slim Framework skeleton application for rapid development",
+    "keywords": ["microframework","rest","router"],
+    "homepage": "http://github.com/gilglecioCom/Slim-Skeleton",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Gilglécio Santos",
+            "email": "gilglecio_dev@hotmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "monolog/monolog": "1.*",
+        "slim/slim": "2.*",
+        "slim/views": "0.*",
+        "twig/twig": "1.*",
+        "jeremykendall/slim-auth": "dev-master",
+        "php-activerecord/php-activerecord": "dev-master"
+    }
+}

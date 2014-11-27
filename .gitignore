@@ -1,0 +1,6 @@
+/vendor
+/cache
+/logs
+.DS_STORE
+composer.lock
+*/**/cache
