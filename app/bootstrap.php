@@ -17,7 +17,7 @@ define('TEMPLATE_DEFAULT', ROOT . DS . 'app' . DS . 'template' . DS . 'default')
 $composer_autoload = ROOT . DS . 'vendor' . DS . 'autoload.php';
 
 if ( ! file_exists($composer_autoload)) {
-    die('Install composer.');
+    die('Run: composer install');
 }
 
 require $composer_autoload;
@@ -43,12 +43,14 @@ $app = new \Slim\Slim(array(
     'cookies.secret_key' => '34l3h5lk3k34221212çk-0912309710',
 ));
 
+require '../app/lib/Auth/Acl.php';
+
 $app->add(new \Slim\Middleware\SessionCookie());
 
 $db = new \PDO('mysql:host=localhost;dbname=cloudcity', 'root', '123');
 $adapter = new PdoAdapter($db, 'users', 'email', 'password', new PasswordValidator());
 
-$acl = new \Namespace\For\Your\Acl();
+$acl = new CloudCity\Auth\Acl();
 $authBootstrap = new Bootstrap($app, $adapter, $acl);
 $authBootstrap->bootstrap();
 

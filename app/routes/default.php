@@ -34,3 +34,8 @@ $app->get('/dashboard', function () use ($app) {
 
 	$app->render('dashboard.html.twig');
 })->name('dashboard');
+
+$app->get('/logout', function () use ($app) {
+    $app->authenticator->logout();
+    $app->redirect('/');
+})->name('logout');

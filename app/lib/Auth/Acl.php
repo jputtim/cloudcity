@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Auth;
+namespace CloudCity\Auth;
 
 use Zend\Permissions\Acl\Acl as ZendAcl;
 
@@ -20,8 +20,7 @@ class Acl extends ZendAcl
         $this->addResource('/');
         $this->addResource('/login');
         $this->addResource('/logout');
-        $this->addResource('/member');
-        $this->addResource('/admin');
+        $this->addResource('/dashboard');
 
         // APPLICATION PERMISSIONS
         // Now we allow or deny a role's access to resources. The third argument
@@ -30,7 +29,7 @@ class Acl extends ZendAcl
         $this->allow('guest', '/login', array('GET', 'POST'));
         $this->allow('guest', '/logout', 'GET');
 
-        $this->allow('member', '/member', 'GET');
+        $this->allow('member', '/dashboard', 'GET');
 
         // This allows admin access to everything
         $this->allow('admin');
