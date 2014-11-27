@@ -37,7 +37,7 @@ $app->map('/login', function () use ($app) {
 })->via('GET', 'POST')->name('login');
 
 $app->get('/dashboard', function () use ($app) {
-
+    
 	$app->render('dashboard.html.twig');
 })->name('dashboard');
 

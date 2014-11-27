@@ -24,7 +24,12 @@ final class User extends AppModel
 				'created_at' => new Datetime()
 			));
 
+			$permission = Permission::create(array(
+				'description' => ''
+			));
+
 			$data['entity_id'] = $entity->id;
+			$data['permission_id'] = $permission->id;
 			$data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
 
 			self::create($data);
