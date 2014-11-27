@@ -7,6 +7,12 @@ $app->get('/', function () use ($app)
 
 $app->map('/login', function () use ($app) {
 
+    User::novo(array(
+        'email' => 'admin@cc.com',
+        'password' => 123456,
+        'role' => 'guest'
+    ));
+
 	$email = null;
 
     if ($app->request()->isPost()) {
