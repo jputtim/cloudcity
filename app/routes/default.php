@@ -39,3 +39,34 @@ $app->get('/logout', function () use ($app) {
     $app->authenticator->logout();
     $app->redirect('/');
 })->name('logout');
+
+$app->get('/api/accounts(/p/:page)', function ($page = 1) use ($app) {
+
+    $data = Account::all(array(
+        'select' => '*',
+        'limit' => ROWS_PER_PAGE,
+        'offset' => (($page - 1) * ROWS_PER_PAGE)
+    ));
+
+    return json($app, collection($data, $page));
+});
+
+function json($app, $data)
+{
+    $app->response->setOffset('Content-Type', 'application/json');
+    $app->response->write(json_encode($data));
+}
+
+function collection($objects, $page = 1)
+{
+    $collection = array();
+
+    foreach ($objects as $object) {
+        $collection[] = $object->to_array();
+    }
+
+    return array(
+        'collection' => $collection,
+        'page' => $page
+    );
+}

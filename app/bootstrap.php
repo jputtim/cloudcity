@@ -14,6 +14,8 @@ define('MODELS', ROOT . DS . 'app' . DS . 'models');
 define('ROUTES', ROOT . DS . 'app' . DS . 'routes');
 define('TEMPLATE_DEFAULT', ROOT . DS . 'app' . DS . 'template' . DS . 'default');
 
+define('ROWS_PER_PAGE', 10);
+
 $composer_autoload = ROOT . DS . 'vendor' . DS . 'autoload.php';
 
 if ( ! file_exists($composer_autoload)) {
