@@ -21,6 +21,7 @@ class Acl extends ZendAcl
         $this->addResource('/login');
         $this->addResource('/logout');
         $this->addResource('/dashboard');
+        $this->addResource('/api/accounts(/p/:page)');
 
         // APPLICATION PERMISSIONS
         // Now we allow or deny a role's access to resources. The third argument
@@ -28,6 +29,7 @@ class Acl extends ZendAcl
         $this->allow('guest', '/', 'GET');
         $this->allow('guest', '/login', array('GET', 'POST'));
         $this->allow('guest', '/logout', 'GET');
+        $this->allow('guest', '/api/accounts(/p/:page)', 'GET');
 
         $this->allow('member', '/dashboard', 'GET');
 
