@@ -54,7 +54,7 @@ $app->get('/api/accounts(/p/:page)', function ($page = 1) use ($app) {
 function json($app, $data)
 {
     $app->response->offsetSet('Content-Type', 'application/json');
-    $app->response->write(json_encode($data['collection']));
+    $app->response->write(json_encode($data));
 }
 
 function collection($objects, $page = 1)
