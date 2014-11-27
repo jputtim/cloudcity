@@ -5,10 +5,30 @@ $app->get('/', function () use ($app)
     $app->redirect('login');
 })->name('index');
 
-$app->get('/login', function () use ($app) {
+$app->map('/login', function () use ($app) {
 
-	$app->render('login.html.twig');
-})->name('login');
+	$email = null;
+
+    if ($app->request()->isPost()) {
+
+        $email = $app->request->post('email');
+        $password = $app->request->post('password');
+
+        $result = $app->authenticator->authenticate($email, $password);
+
+        if ($result->isValid()) {
+            $app->redirect('/');
+        } else {
+            $messages = $result->getMessages();
+            $app->flashNow('error', $messages[0]);
+        }
+    }
+
+	$app->render('login.html.twig', array(
+		'email' => $email
+	));
+
+})->via('GET', 'POST')->name('login');
 
 $app->get('/dashboard', function () use ($app) {
 

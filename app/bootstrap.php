@@ -22,19 +22,35 @@ if ( ! file_exists($composer_autoload)) {
 
 require $composer_autoload;
 
+use JeremyKendall\Password\PasswordValidator;
+use JeremyKendall\Slim\Auth\Adapter\Db\PdoAdapter;
+use JeremyKendall\Slim\Auth\Bootstrap;
+
 // php-activerecord
 \ActiveRecord\Config::initialize(function($cfg)
 {
     $cfg->set_model_directory( MODELS );
     $cfg->set_connections(array(
-        'development' => 'mysql://username:password@localhost/database_name'
+        'development' => 'mysql://root:123@localhost/cloudcity'
     ));
 });
 
 // slim-framework
 $app = new \Slim\Slim(array(
-    'templates.path' => TEMPLATE_DEFAULT
+    'templates.path' => TEMPLATE_DEFAULT,
+
+    'cookies.encrypt' => true,
+    'cookies.secret_key' => '34l3h5lk3k34221212çk-0912309710',
 ));
+
+$app->add(new \Slim\Middleware\SessionCookie());
+
+$db = new \PDO('mysql:host=localhost;dbname=cloudcity', 'root', '123');
+$adapter = new PdoAdapter($db, 'users', 'email', 'password', new PasswordValidator());
+
+$acl = new \Namespace\For\Your\Acl();
+$authBootstrap = new Bootstrap($app, $adapter, $acl);
+$authBootstrap->bootstrap();
 
 // Prepare view
 $app->view(new \Slim\Views\Twig());

@@ -18,5 +18,8 @@
         "twig/twig": "1.*",
         "jeremykendall/slim-auth": "dev-master",
         "php-activerecord/php-activerecord": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {"App\\Auth": "app/lib/Auth/"}
     }
 }
