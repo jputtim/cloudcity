@@ -18,8 +18,13 @@ define(['angular', 'app'], function(angular, app) {
 				controller: 'MyCtrl2'
 			})
 
+			.when('/login', {
+				templateUrl: 'views/login.html',
+				controller: 'LoginCtrl'
+			})
+
 			.otherwise({
-				redirectTo: '/view1'
+				redirectTo: '/login'
 			});
 		}
 	]);

@@ -31,6 +31,12 @@ $app->group('/api', function () use ($app) {
             if ($auth = User::authenticate($body['email'], $body['password'])) {
                 return json($app, $auth);
             }
+
+            $app->response->setStatus(403);
+
+            return json($app, array(
+                'message' => 'Suas credenciais estão incorretas'
+            ));
         }
 
         json($app, User::authenticated());

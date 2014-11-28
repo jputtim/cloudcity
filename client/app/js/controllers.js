@@ -22,5 +22,24 @@ define(['angular', 'services'], function(angular) {
 				});
 			});
 		}
+	])
+
+	// Login
+	.controller('LoginCtrl', ['$scope', 'Login',
+		function($scope, Login) {
+
+			$scope.email = 'admin@cc.com';
+			$scope.password = 123456;
+
+			$scope.authenticate = function () {
+				
+				Login.authenticate($scope.email, $scope.password, function (success) {
+					if (success) {
+						alert('success');
+					};
+				});
+			};
+				
+		}
 	]);
 });
