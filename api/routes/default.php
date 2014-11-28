@@ -58,6 +58,16 @@ $app->group('/api', function () use ($app) {
         $data = Account::all($config);
 
         json($app, collection(to_array($data), $page, $route));
+    })->name('api.accounts');
+
+    $app->get('/logout', function () use ($app) {
+
+        User::logout();
+        $app->redirect('/');
+    })->name('api.logout');
+    
+    $app->get('/authenticated', function () use ($app) {
+        json($app, User::authenticated());
     });
 });
 
@@ -66,13 +76,3 @@ $app->notFound(function () use ($app) {
     $app->response->offsetSet('Content-Type', 'application/json');
     echo json_encode(array('404' => 'Not Found'));
 });
-
-$app->get('/api/authenticated', function () use ($app) {
-    json($app, User::authenticated());
-});
-
-$app->get('/logout', function () use ($app) {
-
-    User::logout();
-    $app->redirect('/');
-})->name('logout');

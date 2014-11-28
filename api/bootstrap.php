@@ -7,10 +7,10 @@ error_reporting(E_ALL | E_STRICT);
 
 define('DS', DIRECTORY_SEPARATOR);
 define('ROOT', dirname(dirname(__FILE__)).DS);
-define('APP', ROOT.'app'.DS);
-define('ROUTES', APP.'routes'.DS);
-define('HELP', APP.'helpers'.DS);
-define('MODELS', APP.'models'.DS);
+define('API', ROOT.'api'.DS);
+define('ROUTES', API.'routes'.DS);
+define('HELP', API.'helpers'.DS);
+define('MODELS', API.'models'.DS);
 define('VENDOR', ROOT.'vendor'.DS);
 
 define('ROWS_PER_PAGE', 25);
