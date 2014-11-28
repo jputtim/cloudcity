@@ -38,6 +38,20 @@ function objectToArray($d)
     }
 }
 
+function requestBody($app, $fields)
+{
+    $body = objectToArray(json_decode($app->request()->getBody()));
+
+    foreach ($fields as $field) {
+        
+        if ( ! isset($body[$field])) {
+            return false;
+        }
+    }
+
+    return $body;
+}
+
 function entity($data) {
     return array(
         'entity' => $data

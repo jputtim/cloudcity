@@ -21,7 +21,7 @@ $app->group('/api', function () use ($app) {
         if ($app->request()->isPost()) {
 
             if ( ! $body = requestBody($app, User::$signin_required_fields)) {
-                
+
                 return json($app, array(
                     'required' => User::$signin_required_fields
                 ));
@@ -48,30 +48,18 @@ $app->group('/api', function () use ($app) {
     });
 });
 
-function requestBody($app, $fields)
-{
-    $body = objectToArray(json_decode($app->request()->getBody()));
+$app->notFound(function () use ($app) {
 
-    $required = array();
+    $app->response->offsetSet('Content-Type', 'application/json');
+    echo json_encode(array('404' => 'Not Found'));
+});
 
-    foreach ($fields as $field) {
-        
-        if ( ! isset($body[$field])) {
-            $required[] = $field;
-        }
-    }
-
-    if (count($required)) {
-        return array('required' => $required);
-    }
-
-    return $body;
-}
-
-$app->get('/dashboard', function () use ($app) {
-    json($app, array());
-})->name('dashboard');
+$app->get('/api/authenticated', function () use ($app) {
+    json($app, User::authenticated());
+});
 
 $app->get('/logout', function () use ($app) {
+
+    User::logout();
     $app->redirect('/');
 })->name('logout');
