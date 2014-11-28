@@ -36,13 +36,21 @@ $app->group('/api', function () use ($app) {
 
     })->via('GET', 'POST')->name('api.signin');
     
-    $app->get('/accounts(/p/:page)', function ($page = 1) use ($app) {
+    $app->get('/accounts(/q/:query)(/p/:page)', function ($query = false, $page = 1) use ($app) {
 
-        $data = Account::all(array(
+        $config = array(
             'select' => 'title, function, id, count, type, attribute',
             'limit' => ROWS_PER_PAGE,
             'offset' => (($page - 1) * ROWS_PER_PAGE)
-        ));
+        );
+
+        if ($query) {
+            $config['conditions'] = array(
+                'title LIKE ? OR function LIKE ? OR count LIKE ?', "%$query%", "%$query%", "%$query%",
+            );
+        }
+
+        $data = Account::all($config);
 
         json($app, collection(to_array($data), $page, 'accounts'));
     });
