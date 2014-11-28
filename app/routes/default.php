@@ -31,7 +31,7 @@ $app->map('/login', function () use ($app) {
     }
 
 	$app->render('login.html.twig', array(
-		'email' => $email
+		'username' => $email
 	));
 
 })->via('GET', 'POST')->name('login');

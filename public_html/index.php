@@ -1,5 +1,7 @@
 <?php 
 
+session_start();
+
 function dd($in, $dump = false)
 {
 	if ($dump) {
