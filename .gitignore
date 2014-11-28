@@ -1,6 +1,7 @@
 /vendor
 /cache
 /logs
+/client/node_modules
 .DS_STORE
 composer.lock
 docs/*.bak

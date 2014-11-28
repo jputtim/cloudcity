@@ -16,6 +16,6 @@
         "php-activerecord/php-activerecord": "dev-master"
     },
     "autoload": {
-        "files": ["app/lib/toolkit.php"]
+        "files": ["api/lib/toolkit.php"]
     }
 }
