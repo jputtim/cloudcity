@@ -21,15 +21,19 @@ $app->group('/api', function () use ($app) {
 
         if ($app->request()->isPost()) {
 
-            $email = $app->request->post('email');
-            $password = $app->request->post('password');
+            if ( ! $body = requestBody($app, User::$signin_required_fields)) {
 
-            if ( ! $auth = User::authenticate($email, $password)) {
-                json($app, false);
+                return json($app, array(
+                    'required' => User::$signin_required_fields
+                ));
+            }
+
+            if ($auth = User::authenticate($body['email'], $body['password'])) {
+                return json($app, $auth);
             }
         }
 
-        json($app, 'signin');
+        json($app, User::authenticated());
 
     })->via('GET', 'POST')->name('api.signin');
     
@@ -41,21 +45,22 @@ $app->group('/api', function () use ($app) {
             'offset' => (($page - 1) * ROWS_PER_PAGE)
         ));
 
-        $data = to_array($data);
-
-        // foreach ($data as $key => $value) {
-        //     $data[$key]['function'] = utf8_encode($data[$key]['function']);
-        //     $data[$key]['title'] = utf8_encode($data[$key]['title']);
-        // }
-
-        json($app, collection($data, $page, 'accounts'));
+        json($app, collection(to_array($data), $page, 'accounts'));
     });
 });
 
-$app->get('/dashboard', function () use ($app) {
-    json($app, array());
-})->name('dashboard');
+$app->notFound(function () use ($app) {
+
+    $app->response->offsetSet('Content-Type', 'application/json');
+    echo json_encode(array('404' => 'Not Found'));
+});
+
+$app->get('/api/authenticated', function () use ($app) {
+    json($app, User::authenticated());
+});
 
 $app->get('/logout', function () use ($app) {
+
+    User::logout();
     $app->redirect('/');
 })->name('logout');
