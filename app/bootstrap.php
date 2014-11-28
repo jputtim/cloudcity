@@ -1,75 +1,42 @@
 <?php
 
-session_start();
-
-ini_set('display_errors', 1);
-error_reporting(E_ALL | E_STRICT);
-
 date_default_timezone_set('America/Bahia');
 
-// Setting constant
+ini_set('display_errors', 'On');
+error_reporting(E_ALL | E_STRICT);
+
 define('DS', DIRECTORY_SEPARATOR);
-define('ROOT', dirname(dirname(__FILE__)));
-define('MODELS', ROOT . DS . 'app' . DS . 'models');
-define('ROUTES', ROOT . DS . 'app' . DS . 'routes');
-define('TEMPLATE_DEFAULT', ROOT . DS . 'app' . DS . 'template' . DS . 'default');
+define('ROOT', dirname(dirname(__FILE__)).DS);
+define('APP', ROOT.'app'.DS);
+define('ROUTES', APP.'routes'.DS);
+define('HELP', APP.'helpers'.DS);
+define('MODELS', APP.'models'.DS);
+define('VENDOR', ROOT.'vendor'.DS);
 
-define('ROWS_PER_PAGE', 10);
+define('ROWS_PER_PAGE', 25);
+define('BASE_URL', 'http://' . $_SERVER['HTTP_HOST'] . '/');
+define('API_URI', BASE_URL . 'api/');
 
-$composer_autoload = ROOT . DS . 'vendor' . DS . 'autoload.php';
+require VENDOR . 'autoload.php';
 
-if ( ! file_exists($composer_autoload)) {
-    die('Run: composer install');
-}
-
-require $composer_autoload;
-
-use JeremyKendall\Password\PasswordValidator;
-use JeremyKendall\Slim\Auth\Adapter\Db\PdoAdapter;
-use JeremyKendall\Slim\Auth\Bootstrap;
-
-// php-activerecord
-\ActiveRecord\Config::initialize(function($cfg)
-{
+\ActiveRecord\Config::initialize( function($cfg) {
     $cfg->set_model_directory( MODELS );
-    $cfg->set_connections(array(
-        'development' => 'mysql://root:123@localhost/cloudcity'
-    ));
+    $cfg->set_connections([
+        'development' => 'mysql://root:123@localhost/cloudcity;charset=utf8'
+    ]);
 });
 
-// slim-framework
-$app = new \Slim\Slim(array(
-    'templates.path' => TEMPLATE_DEFAULT,
+$app = new \Slim\Slim([
+    'debug' => true,
+    'mode' => 'development',
+]);
 
-    'cookies.encrypt' => true,
-    'cookies.secret_key' => '34l3h5lk3k34221212çk-0912309710',
-));
+/**
+ * ROTAS
+ */
+foreach ( glob(ROUTES.'*') as $route) {
+    if ($route = routeMap($route))
+        include $route;
+}
 
-require '../app/lib/Auth/Acl.php';
-
-$app->add(new \Slim\Middleware\SessionCookie());
-
-$db = new \PDO('mysql:host=localhost;dbname=cloudcity', 'root', '123');
-$adapter = new PdoAdapter($db, 'users', 'email', 'password', new PasswordValidator());
-
-$acl = new CloudCity\Auth\Acl();
-$authBootstrap = new Bootstrap($app, $adapter, $acl);
-$authBootstrap->bootstrap();
-
-// Prepare view
-$app->view(new \Slim\Views\Twig());
-$app->view->parserOptions = array(
-    'charset' => 'utf-8',
-    'cache' => ROOT . DS . 'cache',
-    'auto_reload' => true,
-    'strict_variables' => false,
-    'autoescape' => true
-);
-
-$app->view->parserExtensions = array(new \Slim\Views\TwigExtension());
-
-// Include routes
-include ROUTES . DS . 'default.php';
-
-// Run app
 $app->run();
