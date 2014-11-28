@@ -20,15 +20,19 @@ $app->group('/api', function () use ($app) {
 
         if ($app->request()->isPost()) {
 
-            $email = $app->request->post('email');
-            $password = $app->request->post('password');
+            if ( ! $body = requestBody($app, User::$signin_required_fields)) {
+                
+                return json($app, array(
+                    'required' => User::$signin_required_fields
+                ));
+            }
 
-            if ( ! $auth = User::authenticate($email, $password)) {
-                json($app, false);
+            if ($auth = User::authenticate($body['email'], $body['password'])) {
+                return json($app, $auth);
             }
         }
 
-        json($app, 'signin');
+        json($app, User::authenticated());
 
     })->via('GET', 'POST')->name('api.signin');
     
@@ -40,16 +44,29 @@ $app->group('/api', function () use ($app) {
             'offset' => (($page - 1) * ROWS_PER_PAGE)
         ));
 
-        $data = to_array($data);
-
-        // foreach ($data as $key => $value) {
-        //     $data[$key]['function'] = utf8_encode($data[$key]['function']);
-        //     $data[$key]['title'] = utf8_encode($data[$key]['title']);
-        // }
-
-        json($app, collection($data, $page, 'accounts'));
+        json($app, collection(to_array($data), $page, 'accounts'));
     });
 });
+
+function requestBody($app, $fields)
+{
+    $body = objectToArray(json_decode($app->request()->getBody()));
+
+    $required = array();
+
+    foreach ($fields as $field) {
+        
+        if ( ! isset($body[$field])) {
+            $required[] = $field;
+        }
+    }
+
+    if (count($required)) {
+        return array('required' => $required);
+    }
+
+    return $body;
+}
 
 $app->get('/dashboard', function () use ($app) {
     json($app, array());
