@@ -37,6 +37,8 @@ $app->group('/api', function () use ($app) {
     })->via('GET', 'POST')->name('api.signin');
     
     $app->get('/accounts(/q/:query)(/p/:page)', function ($query = false, $page = 1) use ($app) {
+        
+        $route = 'accounts';
 
         $config = array(
             'select' => 'title, function, id, count, type, attribute',
@@ -48,11 +50,13 @@ $app->group('/api', function () use ($app) {
             $config['conditions'] = array(
                 'title LIKE ? OR function LIKE ? OR count LIKE ?', "%$query%", "%$query%", "%$query%",
             );
+
+            $route .= '/q/' . $query;
         }
 
         $data = Account::all($config);
 
-        json($app, collection(to_array($data), $page, 'accounts'));
+        json($app, collection(to_array($data), $page, $route));
     });
 });
 
