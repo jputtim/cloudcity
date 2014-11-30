@@ -58,17 +58,18 @@ function entity($data) {
     );
 }
 
-function collection($data, $page = 1, $route)
+function collection($data, $total_rows, $page = 1, $route)
 {
     $uri = API_URI . $route . '/p/';
 
     return array(
         'rows' => count($data),
-        'collection' => $data,
         'per_page' => ROWS_PER_PAGE,
+        'total_rows' => (int) $total_rows,
         'page' => $page,
         'next' => $uri . ($page + 1),
         'prev' => $uri . ($page == 1 ? 1 : $page - 1),
+        'collection' => $data,
     );
 }
 

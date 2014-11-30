@@ -14,6 +14,7 @@ define('MODELS', API.'models'.DS);
 define('VENDOR', ROOT.'vendor'.DS);
 
 define('ROWS_PER_PAGE', 25);
+
 define('BASE_URL', 'http://' . $_SERVER['HTTP_HOST'] . '/');
 define('API_URI', BASE_URL . 'api/');
 

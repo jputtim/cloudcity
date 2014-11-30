@@ -6,11 +6,10 @@ $app->get('/', function () use ($app)
 
 })->name('index');
 
-$app->group('/api', function () use ($app) {
-
-
-    $app->map('/signin', function () use ($app) {
-
+$app->group('/api', function () use ($app) 
+{
+    $app->map('/signin', function () use ($app) 
+    {
         User::novo(array(
             'email' => 'admin@cc.com',
             'password' => 123456,
@@ -43,15 +42,11 @@ $app->group('/api', function () use ($app) {
 
     })->via('GET', 'POST')->name('api.signin');
     
-    $app->get('/accounts(/q/:query)(/p/:page)', function ($query = false, $page = 1) use ($app) {
-        
+    $app->get('/accounts(/q/:query)(/p/:page)', function ($query = false, $page = 1) use ($app) 
+    {
         $route = 'accounts';
 
-        $config = array(
-            'select' => 'title, function, id, count, type, attribute',
-            'limit' => ROWS_PER_PAGE,
-            'offset' => (($page - 1) * ROWS_PER_PAGE)
-        );
+        $config = array('select' => 'title, function, id, count, type, attribute');
 
         if ($query) {
             $config['conditions'] = array(
@@ -61,24 +56,26 @@ $app->group('/api', function () use ($app) {
             $route .= '/q/' . $query;
         }
 
-        $data = Account::all($config);
+        $data = Account::pagination($config, $page);
 
-        json($app, collection(to_array($data), $page, $route));
+        json($app, collection(to_array($data['data']), $data['total_rows'], $page, $route));
+
     })->name('api.accounts');
 
-    $app->get('/logout', function () use ($app) {
-
+    $app->get('/logout', function () use ($app) 
+    {
         User::logout();
-        $app->redirect('/');
+        json($app, true);
     })->name('api.logout');
     
-    $app->get('/authenticated', function () use ($app) {
+    $app->get('/authenticated', function () use ($app) 
+    {
         json($app, User::authenticated());
     });
 });
 
-$app->notFound(function () use ($app) {
-
+$app->notFound(function () use ($app) 
+{
     $app->response->offsetSet('Content-Type', 'application/json');
     echo json_encode(array('404' => 'Not Found'));
 });
